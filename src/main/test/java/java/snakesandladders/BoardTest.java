@@ -54,6 +54,15 @@ public class BoardTest {
         assertThat(board.getPositionOf("non-existent-player"), is(-1));
     }
 
+    @Test
+    public void hasWinner() {
+        String[] winningBoard = initialiseEmptyBoard();
+        winningBoard[99] = "one";
+        Board board = new Board(winningBoard);
+
+        assertThat(board.hasWinner(), is(true));
+    }
+
     private String[] initialiseEmptyBoard() {
         String[] boardSetup = new String[100];
         for (int i = 0; i < 100; i++) {

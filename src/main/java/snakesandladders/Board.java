@@ -38,4 +38,8 @@ public class Board {
     public void register(String token) {
         board[0] = token;
     }
+
+    public boolean hasWinner() {
+        return !board[99].equals("empty");
+    }
 }
