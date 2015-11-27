@@ -8,11 +8,12 @@ public class Board {
     private static final int UNREGISTERED_PLAYER = -1;
     private final String[] board;
 
-    public Board(int numberOfSquaresOnBoard) {
+    public Board(int numberOfSquaresOnBoard, String playerToken) {
         this.board = new String[numberOfSquaresOnBoard];
         for (int i = 0; i < numberOfSquaresOnBoard; i++) {
             board[i] = String.valueOf(i);
         }
+        register(playerToken);
     }
 
     public Board(String[] initialSetup) {

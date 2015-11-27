@@ -17,13 +17,8 @@ public class Game {
     }
 
     public static void main(String... args) {
-        Game game = new Game(buildPrompt(), new Player("ONE"), new Dice(), new Board(100));
-        game.start();
-    }
-
-    public void start() {
-        board.register(player.getToken());
-        play();
+        Game game = new Game(buildPrompt(), new Player("ONE"), new Dice(), new Board(100, "ONE"));
+        game.play();
     }
 
     void play() {
