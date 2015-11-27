@@ -22,6 +22,21 @@ public class GameTest {
     }
 
     @Test
+    public void playerPromptedToRollDie() {
+        PromptSpy prompt = new PromptSpy();
+        Player player1 = new Player("one");
+        Dice dice = new Dice();
+        BoardSpy boardSpy = new BoardSpy(100);
+        boardSpy.register(player1.getToken());
+
+        Game game = new Game(prompt, player1, dice, boardSpy);
+        game.takeMove();
+
+        assertThat(prompt.getNumberOfPlayersPromptedToRollDie(), is(1));
+        assertThat(prompt.getNumberOfPlayersRolledDice(), is(1));
+    }
+
+    @Test
     public void playerMovesTheNumberOfSpacesRolledOnDice() {
         PromptSpy prompt = new PromptSpy();
         PlayerSpy playerSpy = new PlayerSpy("one");

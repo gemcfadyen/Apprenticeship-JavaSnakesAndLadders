@@ -35,6 +35,9 @@ public class Game {
     }
 
     void takeMove() {
+        prompt.print(board);
+        prompt.promptUserToRollDice();
+        prompt.readRollDieCommand();
         int number = player.roll(dice);
         prompt.printDiceRoll(player.getToken(), number);
 
@@ -43,7 +46,6 @@ public class Game {
         if (newPosition < board.size()) {
             board.update(player.getToken(), number);
         }
-        prompt.print(board);
     }
 
     private boolean winning(Board board) {

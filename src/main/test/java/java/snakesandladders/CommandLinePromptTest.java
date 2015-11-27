@@ -21,12 +21,31 @@ public class CommandLinePromptTest {
         assertThat(writer.toString(), is("Congratulations, one has won"));
     }
 
+    @Test
+    public void promptsUserToRollDice() {
+        StringWriter writer = new StringWriter();
+        Prompt prompt = new CommandLinePrompt(new StringReader(""), writer);
+
+        prompt.promptUserToRollDice();
+
+        assertThat(writer.toString(), is("Press enter to roll the dice....."));
+    }
+
     @Test(expected = WriteException.class)
     public void exceptionThrownWhenErrorInWriting() {
         Writer writerWhichThrowsExceptionStub = new WriterExceptionStub();
         Prompt prompt = new CommandLinePrompt(new StringReader(""), writerWhichThrowsExceptionStub);
 
         prompt.printWinFor("one");
+    }
+
+    @Test
+    public void readsRollCommand() {
+        Prompt prompt = new CommandLinePrompt(new StringReader("\n"), new StringWriter());
+
+        String command = prompt.readRollDieCommand();
+
+        assertThat(command, is(""));
     }
 
     @Test
@@ -64,7 +83,7 @@ public class CommandLinePromptTest {
     }
 
     private String emptyBoard() {
-        return  "| 100 |  99 |  98 |  97 |  96 |  95 |  94 |  93 |  92 |  91 | \n" +
+        return "| 100 |  99 |  98 |  97 |  96 |  95 |  94 |  93 |  92 |  91 | \n" +
                 "|  81 |  82 |  83 |  84 |  85 |  86 |  87 |  88 |  89 |  90 | \n" +
                 "|  80 |  79 |  78 |  77 |  76 |  75 |  74 |  73 |  72 |  71 | \n" +
                 "|  61 |  62 |  63 |  64 |  65 |  66 |  67 |  68 |  69 |  70 | \n" +
@@ -79,7 +98,7 @@ public class CommandLinePromptTest {
     }
 
     private String boardWithPlayer() {
-        return  "| 100 |  99 |  98 |  97 |  96 |  95 |  94 |  93 |  92 |  91 | \n" +
+        return "| 100 |  99 |  98 |  97 |  96 |  95 |  94 |  93 |  92 |  91 | \n" +
                 "|  81 |  82 |  83 |  84 |  85 |  86 |  87 |  88 |  89 |  90 | \n" +
                 "|  80 |  79 |  78 |  77 |  76 |  75 |  74 |  73 |  72 |  71 | \n" +
                 "|  61 |  62 |  63 |  64 |  65 |  66 |  67 |  68 |  69 |  70 | \n" +

@@ -7,6 +7,19 @@ public class PromptSpy implements Prompt {
     private int numberOfWinMessagesPrinted = 0;
     private boolean hasPrintedBoard;
     private Map<String, Integer> numberOfTimesPlayerHasRolledDice = new HashMap<>();
+    private int numberOfTimesPlayerHasAskedToRollDice = 0;
+    private int numberOfTimesPlayerGaveRollCommand = 0;
+
+    @Override
+    public String readRollDieCommand() {
+        numberOfTimesPlayerGaveRollCommand++;
+        return "\n";
+    }
+
+    @Override
+    public void promptUserToRollDice() {
+        numberOfTimesPlayerHasAskedToRollDice++;
+    }
 
     @Override
     public void printWinFor(String token) {
@@ -36,5 +49,13 @@ public class PromptSpy implements Prompt {
 
     public boolean hasDisplayedBoard() {
        return hasPrintedBoard;
+    }
+
+    public int getNumberOfPlayersPromptedToRollDie() {
+        return numberOfTimesPlayerHasAskedToRollDice;
+    }
+
+    public int getNumberOfPlayersRolledDice() {
+        return numberOfTimesPlayerGaveRollCommand;
     }
 }
