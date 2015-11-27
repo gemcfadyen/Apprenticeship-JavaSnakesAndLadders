@@ -9,7 +9,6 @@ public class Dice {
 
     public int roll() {
         Random random = new SecureRandom();
-        int number = random.nextInt(MAX_NUMBER) + MIN_NUMBER;
-        return number;
+        return random.nextInt(MAX_NUMBER) + MIN_NUMBER;
     }
 }

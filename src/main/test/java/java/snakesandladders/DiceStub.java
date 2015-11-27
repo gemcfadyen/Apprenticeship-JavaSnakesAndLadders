@@ -12,5 +12,4 @@ public class DiceStub extends Dice {
     public int roll() {
         return rolls[counter++];
     }
-
 }

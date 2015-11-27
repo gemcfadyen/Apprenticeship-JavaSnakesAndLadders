@@ -9,6 +9,7 @@ public class PromptSpy implements Prompt {
     private Map<String, Integer> numberOfTimesPlayerHasRolledDice = new HashMap<>();
     private int numberOfTimesPlayerHasAskedToRollDice = 0;
     private int numberOfTimesPlayerGaveRollCommand = 0;
+    private int numberOfTimesBoardIsPrinted = 0;
 
     @Override
     public String readRollDieCommand() {
@@ -17,7 +18,7 @@ public class PromptSpy implements Prompt {
     }
 
     @Override
-    public void promptUserToRollDice() {
+    public void promptUserToRollDie() {
         numberOfTimesPlayerHasAskedToRollDice++;
     }
 
@@ -36,6 +37,7 @@ public class PromptSpy implements Prompt {
 
     @Override
     public void print(Board board) {
+        numberOfTimesBoardIsPrinted++;
         hasPrintedBoard = true;
     }
 
@@ -57,5 +59,9 @@ public class PromptSpy implements Prompt {
 
     public int getNumberOfPlayersRolledDice() {
         return numberOfTimesPlayerGaveRollCommand;
+    }
+
+    public int getNumberOfTimesBoardIsPrinted() {
+        return numberOfTimesBoardIsPrinted;
     }
 }

@@ -8,28 +8,11 @@ import static org.junit.Assert.assertThat;
 public class GameTest {
 
     @Test
-    public void gameStartsWithPlayersOnFirstSquare() {
-        PromptSpy prompt = new PromptSpy();
-        Player player1 = new Player("one");
-        Dice dice = new Dice();
-        BoardSpy boardSpy = new BoardSpy(100);
-        boardSpy.register(player1.getToken());
-
-        new Game(prompt, player1, dice, boardSpy);
-
-        assertThat(boardSpy.getNumberOfPlayersRegistered(), is(1));
-        assertThat(boardSpy.getPositionOf(player1.getToken()), is(0));
-    }
-
-    @Test
     public void playerPromptedToRollDie() {
         PromptSpy prompt = new PromptSpy();
         Player player1 = new Player("one");
-        Dice dice = new Dice();
-        BoardSpy boardSpy = new BoardSpy(100);
-        boardSpy.register(player1.getToken());
+        Game game = new Game(prompt, player1, createDie(), createBoardAndRegisterPlayer(player1));
 
-        Game game = new Game(prompt, player1, dice, boardSpy);
         game.takeMove();
 
         assertThat(prompt.getNumberOfPlayersPromptedToRollDie(), is(1));
@@ -38,13 +21,9 @@ public class GameTest {
 
     @Test
     public void playerMovesTheNumberOfSpacesRolledOnDice() {
-        PromptSpy prompt = new PromptSpy();
         PlayerSpy playerSpy = new PlayerSpy("one");
-        Dice dice = new DiceStub(3);
-        BoardSpy boardSpy = new BoardSpy(100);
-        boardSpy.register(playerSpy.getToken());
-
-        Game game = new Game(prompt, playerSpy, dice, boardSpy);
+        BoardSpy boardSpy = createBoardAndRegisterPlayer(playerSpy);
+        Game game = new Game(new PromptSpy(), playerSpy, createDieWhichRolls(3), boardSpy);
 
         game.takeMove();
 
@@ -54,13 +33,9 @@ public class GameTest {
 
     @Test
     public void playerTakesTwoMovesAcrossBoard() {
-        PromptSpy prompt = new PromptSpy();
         PlayerSpy playerSpy = new PlayerSpy("one");
-        Dice dice = new DiceStub(3, 4);
-        BoardSpy boardSpy = new BoardSpy(100);
-        boardSpy.register(playerSpy.getToken());
-
-        Game game = new Game(prompt, playerSpy, dice, boardSpy);
+        BoardSpy boardSpy = createBoardAndRegisterPlayer(playerSpy);
+        Game game = new Game(new PromptSpy(), playerSpy, new DiceStub(3, 4), boardSpy);
 
         game.takeMove();
         game.takeMove();
@@ -73,13 +48,13 @@ public class GameTest {
     public void playerWinsGame() {
         PromptSpy prompt = new PromptSpy();
         PlayerSpy playerSpy = new PlayerSpy("one");
-        Dice dice = new DiceStub(4);
         Board board = initialSetup(95, playerSpy.getToken());
-        Game game = new Game(prompt, playerSpy, dice, board);
+        Game game = new Game(prompt, playerSpy, createDieWhichRolls(4), board);
 
         game.play();
 
         assertThat(prompt.numberOfTimesWinMessageDisplayed(), is(1));
+        assertThat(prompt.getNumberOfTimesBoardIsPrinted(), is(2));
         assertThat(board.getPositionOf(playerSpy.getToken()), is(99));
         assertThat(board.hasWinner(), is(true));
     }
@@ -88,9 +63,8 @@ public class GameTest {
     public void playerOnlyWinsGameIfTheyThrowExactlyTheNumberOfRemainingSquaresOnBoard() {
         PromptSpy prompt = new PromptSpy();
         PlayerSpy playerSpy = new PlayerSpy("one");
-        Dice dice = new DiceStub(5);
         Board board = initialSetup(95, playerSpy.getToken());
-        Game game = new Game(prompt, playerSpy, dice, board);
+        Game game = new Game(prompt, playerSpy, createDieWhichRolls(5), board);
 
         game.takeMove();
 
@@ -103,9 +77,7 @@ public class GameTest {
     public void diceRollDisplayed() {
         PromptSpy prompt = new PromptSpy();
         PlayerSpy playerSpy = new PlayerSpy("one");
-        Dice dice = new DiceStub(5);
-        Board board = initialSetup(94, playerSpy.getToken());
-        Game game = new Game(prompt, playerSpy, dice, board);
+        Game game = new Game(prompt, playerSpy, createDieWhichRolls(5), initialSetup(94, playerSpy.getToken()));
 
         game.takeMove();
 
@@ -116,13 +88,38 @@ public class GameTest {
     public void boardDisplayed() {
         PromptSpy prompt = new PromptSpy();
         PlayerSpy playerSpy = new PlayerSpy("one");
-        Dice dice = new DiceStub(5);
-        Board board = initialSetup(94, playerSpy.getToken());
-        Game game = new Game(prompt, playerSpy, dice, board);
+        Game game = new Game(prompt, playerSpy, createDieWhichRolls(5), initialSetup(94, playerSpy.getToken()));
 
         game.takeMove();
 
         assertThat(prompt.hasDisplayedBoard(), is(true));
+    }
+
+    @Test
+    public void gamePlayedFromStartToFinish() {
+        PromptSpy prompt = new PromptSpy();
+        Dice dice = new DiceStub(6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 3);
+        BoardStub board = new BoardStub(100);
+        Game game = new Game(prompt, new PlayerSpy("one"), dice, board);
+
+        game.start();
+
+        assertThat(prompt.numberOfTimesWinMessageDisplayed(), is(1));
+        assertThat(board.hasPlayerRegistered(), is(true));
+    }
+
+    private Dice createDie() {
+        return new Dice();
+    }
+
+    private DiceStub createDieWhichRolls(int i) {
+        return new DiceStub(i);
+    }
+
+    private BoardSpy createBoardAndRegisterPlayer(Player player1) {
+        BoardSpy boardSpy = new BoardSpy(100);
+        boardSpy.register(player1.getToken());
+        return boardSpy;
     }
 
     private Board initialSetup(int position, String playerToken) {

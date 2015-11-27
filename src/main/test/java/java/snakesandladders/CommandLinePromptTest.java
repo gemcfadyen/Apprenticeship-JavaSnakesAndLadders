@@ -18,7 +18,7 @@ public class CommandLinePromptTest {
 
         prompt.printWinFor("one");
 
-        assertThat(writer.toString(), is("Congratulations, one has won"));
+        assertThat(writer.toString(), is("Congratulations, one has won\n"));
     }
 
     @Test
@@ -26,7 +26,7 @@ public class CommandLinePromptTest {
         StringWriter writer = new StringWriter();
         Prompt prompt = new CommandLinePrompt(new StringReader(""), writer);
 
-        prompt.promptUserToRollDice();
+        prompt.promptUserToRollDie();
 
         assertThat(writer.toString(), is("Press enter to roll the dice....."));
     }
@@ -55,7 +55,7 @@ public class CommandLinePromptTest {
 
         prompt.printDiceRoll("one", 4);
 
-        assertThat(writer.toString(), is(".........one rolled 4.............\n"));
+        assertThat(writer.toString(), is(".........one rolled 4............\n"));
     }
 
     @Test

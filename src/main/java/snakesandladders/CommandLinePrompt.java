@@ -25,14 +25,32 @@ public class CommandLinePrompt implements Prompt {
     }
 
     @Override
-    public void promptUserToRollDice() {
+    public void promptUserToRollDie() {
         print("Press enter to roll the dice.....");
     }
 
     @Override
-    public void printWinFor(String token) {
-        print("Congratulations, " + token + " has won");
+    public void printDiceRoll(String playerToken, int numberRolled) {
+        print("........." + playerToken + " rolled " + numberRolled + "............\n");
+    }
 
+    @Override
+    public void printWinFor(String token) {
+        print("Congratulations, " + token + " has won\n");
+    }
+
+    @Override
+    public void print(Board board) {
+        StringBuffer display = new StringBuffer("");
+        List<List<String>> rows = board.getRows();
+
+        for (int rowNumber = rows.size() - 1; rowNumber >= 0; rowNumber--) {
+            List<String> row = rows.get(rowNumber);
+            display.append(leftGrid());
+            formatLinesInGrid(display, rowNumber, row);
+            display.append(newLine());
+        }
+        print(display.toString() + "\n");
     }
 
     private void print(String message) {
@@ -44,57 +62,50 @@ public class CommandLinePrompt implements Prompt {
         }
     }
 
-    @Override
-    public void printDiceRoll(String playerToken, int numberRolled) {
-        print("........." + playerToken + " rolled " + numberRolled + ".............\n");
-    }
-
-    @Override
-    public void print(Board board) {
-        StringBuffer display = new StringBuffer("");
-        List<List<String>> rows = board.getRows();
-
-        for (int rowNumber = rows.size() - 1; rowNumber >= 0; rowNumber--) {
-            List<String> row = rows.get(rowNumber);
-            display.append(leftGrid());
-
-            if (evenRow(rowNumber)) {
-                displayRowInAscendingOrder(display, row);
-            } else {
-                displayRowInDescendingOrder(display, row);
-            }
-            display.append(newLine());
-        }
-        print(display.toString() + "\n");
-    }
-
-    private void displayRowInDescendingOrder(StringBuffer display, List<String> row) {
-        for (int i = row.size() - 1; i >= 0; i--) {
-            display.append(pad(display(row.get(i))));
-            display.append(dividingGrid());
-        }
-    }
-
-    private void displayRowInAscendingOrder(StringBuffer display, List<String> row) {
-        for (int i = 0; i < row.size(); i++) {
-            display.append(pad(display(row.get(i))) + dividingGrid());
-        }
-    }
-
     private String leftGrid() {
         return "| ";
-    }
-
-    private String dividingGrid() {
-        return " | ";
     }
 
     private String newLine() {
         return "\n";
     }
 
+    private void formatLinesInGrid(StringBuffer display, int rowNumber, List<String> row) {
+        if (evenRow(rowNumber)) {
+            displayRowInAscendingOrder(display, row);
+        } else {
+            displayRowInDescendingOrder(display, row);
+        }
+    }
+
     private boolean evenRow(int rowNumber) {
         return rowNumber % 2 == 0;
+    }
+
+    private void displayRowInAscendingOrder(StringBuffer display, List<String> row) {
+        for (String aRow : row) {
+            display.append(pad(display(aRow)) + dividingGrid());
+        }
+    }
+
+    private void displayRowInDescendingOrder(StringBuffer display, List<String> row) {
+        for (int squareNumber = row.size() - 1; squareNumber >= 0; squareNumber--) {
+            display.append(pad(display(row.get(squareNumber))));
+            display.append(dividingGrid());
+        }
+    }
+
+    private String pad(String squareLabel) {
+        int lengthOfNumber = squareLabel.length();
+        while (lengthOfNumber < 3) {
+            squareLabel = " " + squareLabel;
+            lengthOfNumber++;
+        }
+        return squareLabel;
+    }
+
+    private String dividingGrid() {
+        return " | ";
     }
 
     private String display(String value) {
@@ -109,15 +120,4 @@ public class CommandLinePrompt implements Prompt {
             return label;
         }
     }
-
-    private String pad(String squareLabel) {
-        int lengthOfNumber = squareLabel.length();
-        while (lengthOfNumber < 3) {
-            squareLabel = " " + squareLabel;
-            lengthOfNumber++;
-        }
-        return squareLabel;
-    }
-
-
 }

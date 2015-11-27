@@ -26,24 +26,22 @@ public class Game {
         play();
     }
 
-   void play() {
+    void play() {
         do {
             takeMove();
         } while (!winning(board));
 
         prompt.printWinFor(player.getToken());
+        prompt.print(board);
     }
 
     void takeMove() {
         prompt.print(board);
-        prompt.promptUserToRollDice();
-        prompt.readRollDieCommand();
-        int number = player.roll(dice);
+        int number = playerRollsDice();
         prompt.printDiceRoll(player.getToken(), number);
 
         int currentPosition = board.getPositionOf(player.getToken());
-        int newPosition = currentPosition + number;
-        if (newPosition < board.size()) {
+        if (calculateNewPosition(number, currentPosition) < board.size()) {
             board.update(player.getToken(), number);
         }
     }
@@ -52,12 +50,20 @@ public class Game {
         return board.hasWinner();
     }
 
+    private int playerRollsDice() {
+        prompt.promptUserToRollDie();
+        prompt.readRollDieCommand();
+        return player.roll(dice);
+    }
+
+    private int calculateNewPosition(int number, int currentPosition) {
+        return currentPosition + number;
+    }
+
     private static Prompt buildPrompt() {
         return new CommandLinePrompt(
                 new InputStreamReader(System.in),
                 new OutputStreamWriter(System.out)
         );
     }
-
-
 }
