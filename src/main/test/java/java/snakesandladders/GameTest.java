@@ -1,5 +1,6 @@
 package snakesandladders;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.is;
@@ -12,7 +13,7 @@ public class GameTest {
         PromptSpy prompt = new PromptSpy();
         Player player1 = new Player("one");
         Dice dice = new Dice();
-        BoardSpy boardSpy = new BoardSpy();
+        BoardSpy boardSpy = new BoardSpy(100);
         boardSpy.register(player1.getToken());
 
         new Game(prompt, player1, dice, boardSpy);
@@ -26,7 +27,7 @@ public class GameTest {
         PromptSpy prompt = new PromptSpy();
         PlayerSpy playerSpy = new PlayerSpy("one");
         Dice dice = new DiceStub(3);
-        BoardSpy boardSpy = new BoardSpy();
+        BoardSpy boardSpy = new BoardSpy(100);
         boardSpy.register(playerSpy.getToken());
 
         Game game = new Game(prompt, playerSpy, dice, boardSpy);
@@ -42,7 +43,7 @@ public class GameTest {
         PromptSpy prompt = new PromptSpy();
         PlayerSpy playerSpy = new PlayerSpy("one");
         Dice dice = new DiceStub(3, 4);
-        BoardSpy boardSpy = new BoardSpy();
+        BoardSpy boardSpy = new BoardSpy(100);
         boardSpy.register(playerSpy.getToken());
 
         Game game = new Game(prompt, playerSpy, dice, boardSpy);
@@ -82,6 +83,32 @@ public class GameTest {
         assertThat(prompt.numberOfTimesWinMessageDisplayed(), is(0));
         assertThat(board.getPositionOf(playerSpy.getToken()), is(95));
         assertThat(board.hasWinner(), is(false));
+    }
+
+    @Test
+    public void diceRollDisplayed() {
+        PromptSpy prompt = new PromptSpy();
+        PlayerSpy playerSpy = new PlayerSpy("one");
+        Dice dice = new DiceStub(5);
+        Board board = initialSetup(94, playerSpy.getToken());
+        Game game = new Game(prompt, playerSpy, dice, board);
+
+        game.takeMove();
+
+        assertThat(prompt.numberOfTimesDiceRollHasBeenPrintedFor(playerSpy.getToken()), is(1));
+    }
+
+    @Test
+    public void boardDisplayed() {
+        PromptSpy prompt = new PromptSpy();
+        PlayerSpy playerSpy = new PlayerSpy("one");
+        Dice dice = new DiceStub(5);
+        Board board = initialSetup(94, playerSpy.getToken());
+        Game game = new Game(prompt, playerSpy, dice, board);
+
+        game.takeMove();
+
+        assertThat(prompt.hasDisplayedBoard(), is(true));
     }
 
     private Board initialSetup(int position, String playerToken) {

@@ -1,13 +1,17 @@
 package snakesandladders;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class Board {
 
     private final String[] board;
 
-    public Board() {
-        this.board = new String[100];
-        for (int i = 0; i < 100; i++) {
-            board[i] = "empty";
+    public Board(int numberOfSquaresOnBoard) {
+        this.board = new String[numberOfSquaresOnBoard];
+        for (int i = 0; i < numberOfSquaresOnBoard; i++) {
+            board[i] = String.valueOf(i);
         }
     }
 
@@ -41,5 +45,19 @@ public class Board {
 
     public boolean hasWinner() {
         return !board[99].equals("empty");
+    }
+
+    public List<List<String>> getRows() {
+        List rows = new ArrayList<>();
+
+        int counter = 0;
+        while (counter < board.length) {
+            List<String> oneRow = new ArrayList<>(Arrays.asList(board).subList(counter, counter + 10));
+            counter += 10;
+            rows.add(oneRow);
+        }
+
+
+        return rows;
     }
 }

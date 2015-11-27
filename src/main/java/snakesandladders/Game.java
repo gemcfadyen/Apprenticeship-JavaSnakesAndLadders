@@ -25,11 +25,14 @@ public class Game {
 
     void takeMove() {
         int number = player.roll(dice);
+        prompt.printDiceRoll(player.getToken(), number);
+
         int currentPosition = board.getPositionOf(player.getToken());
         int newPosition = currentPosition + number;
         if (newPosition < board.size()) {
             board.update(player.getToken(), number);
         }
+        prompt.print(board);
     }
 
     private boolean winning(Board board) {
