@@ -43,8 +43,10 @@ public class BoardTest {
         board.register("playerOne");
         board.update("playerOne", 5);
         board.update("playerOne", 2);
-
         assertThat(board.getPositionOf("playerOne"), is(7));
+
+        List<List<String>> rows = board.getRows();
+        assertThat(rows.get(0).get(5), is("5"));
     }
 
     @Test

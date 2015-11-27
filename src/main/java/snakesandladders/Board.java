@@ -35,7 +35,7 @@ public class Board {
 
     public void update(String token, int numberOfMoves) {
         int currentPosition = getPositionOf(token);
-        board[currentPosition] = "empty";
+        board[currentPosition] = String.valueOf(currentPosition);
         board[currentPosition + numberOfMoves] = token;
     }
 
@@ -44,7 +44,17 @@ public class Board {
     }
 
     public boolean hasWinner() {
-        return !board[99].equals("empty");
+        String label = board[99];
+        return isAlpha(label);
+    }
+
+    private boolean isAlpha(String label) {
+       try {
+           Integer.valueOf(label);
+           return false;
+       } catch(Exception e) {
+           return true;
+       }
     }
 
     public List<List<String>> getRows() {

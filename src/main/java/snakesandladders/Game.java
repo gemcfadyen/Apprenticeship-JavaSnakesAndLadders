@@ -1,5 +1,8 @@
 package snakesandladders;
 
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+
 public class Game {
     private Prompt prompt;
     private final Player player;
@@ -13,9 +16,17 @@ public class Game {
         this.board = board;
     }
 
+    public static void main(String... args) {
+        Game game = new Game(buildPrompt(), new Player("ONE"), new Dice(), new Board(100));
+        game.start();
+    }
 
-    public void play() {
+    public void start() {
+        board.register(player.getToken());
+        play();
+    }
 
+   void play() {
         do {
             takeMove();
         } while (!winning(board));
@@ -38,5 +49,13 @@ public class Game {
     private boolean winning(Board board) {
         return board.hasWinner();
     }
+
+    private static Prompt buildPrompt() {
+        return new CommandLinePrompt(
+                new InputStreamReader(System.in),
+                new OutputStreamWriter(System.out)
+        );
+    }
+
 
 }

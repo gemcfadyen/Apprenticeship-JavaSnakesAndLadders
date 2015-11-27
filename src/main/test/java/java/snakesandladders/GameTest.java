@@ -1,6 +1,5 @@
 package snakesandladders;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.is;
@@ -114,7 +113,7 @@ public class GameTest {
     private Board initialSetup(int position, String playerToken) {
         String[] initialSetup = new String[100];
         for (int i = 0; i < initialSetup.length; i++) {
-            initialSetup[i] = "empty";
+            initialSetup[i] = String.valueOf(i);
         }
         initialSetup[position] = playerToken;
         return new Board(initialSetup);
